@@ -1,0 +1,202 @@
+student@sys-21:~$ mysql -u root -p
+Enter password: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 8
+Server version: 8.0.11 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2018, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use test_run;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> delimiter $$
+mysql> 
+mysql> create funtion isElig()
+    -> return int
+    -> 
+    -> begin
+    -> 
+    -> return 0;
+    -> end$$
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'funtion isElig()
+return int
+
+begin
+
+return 0;
+end' at line 1
+mysql> CREATE FUNCTION test (i CHAR)
+    -> RETURNS CHAR
+    -> NOT DETERMINISTIC
+    -> BEGIN
+    -> DECLARE select_var CHAR;
+    -> SET select_var = (SELECT name FROM table WHERE id = i);
+    -> RETURN select_var;
+    -> END$$
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'table WHERE id = i);
+RETURN select_var;
+END' at line 6
+mysql> delimiter $$
+mysql> 
+mysql> create funtion isElig()
+    -> return int
+    -> begin
+    ->     select * from gamers where points> 110;
+    -> return 0;
+    -> end$$
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'funtion isElig()
+return int
+begin
+    select * from gamers where points> 110;
+re' at line 1
+mysql> delimiter $$
+mysql> 
+mysql> create function isElig()
+    -> return int
+    -> begin
+    ->     select * from gamers where points> 110;
+    -> return 0;
+    -> end$$
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'return int
+begin
+    select * from gamers where points> 110;
+return 0;
+end' at line 2
+mysql> delimiter $$
+mysql> 
+mysql> create function isElig()
+    -> returns int
+    -> begin
+    ->     select * from gamers where points> 110;
+    -> return 0;
+    -> end$$
+ERROR 1415 (0A000): Not allowed to return a result set from a function
+mysql> delimiter $$
+mysql> 
+mysql> create function find(id int)
+    -> returns varchar(20)
+    -> begin
+    ->     name=(select name from gamers where gam_id = id);
+    -> return name;
+    -> end$$
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '=(select name from gamers where gam_id = id);
+return name;
+end' at line 4
+mysql> delimiter $$
+mysql> 
+mysql> create function find(id int)
+    -> returns varchar(20)
+    -> begin
+    ->     set name=(select name from gamers where gam_id = id);
+    -> return name;
+    -> end$$
+ERROR 1193 (HY000): Unknown system variable 'name'
+mysql> delimiter $$
+mysql> 
+mysql> create function find(id int)
+    -> returns varchar(20)
+    -> begin
+    ->     declare name varchar(20);
+    ->     set name=(select name from gamers where gam_id = id);
+    -> return name;
+    -> end$$
+ERROR 1418 (HY000): This function has none of DETERMINISTIC, NO SQL, or READS SQL DATA in its declaration and binary logging is enabled (you *might* want to use the less safe log_bin_trust_function_creators variable)
+mysql> delimiter $$
+mysql> 
+mysql> create function find(id int)
+    -> returns varchar(20)
+    -> NOT DETERMINISTIC
+    -> begin
+    ->     declare name varchar(20);
+    ->     set name=(select name from gamers where gam_id = id);
+    -> return name;
+    -> end$$
+ERROR 1418 (HY000): This function has none of DETERMINISTIC, NO SQL, or READS SQL DATA in its declaration and binary logging is enabled (you *might* want to use the less safe log_bin_trust_function_creators variable)
+mysql> SET GLOBAL log_bin_trust_function_creators = 1;$$
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> delimiter $$
+mysql> 
+mysql> create function find(id int)
+    -> returns varchar(20)
+    -> NOT DETERMINISTIC
+    -> begin
+    ->     declare name varchar(20);
+    ->     set name=(select name from gamers where gam_id = id);
+    -> return name;
+    -> end$$
+Query OK, 0 rows affected (0.15 sec)
+
+mysql> select find(001)$$
++-----------+
+| find(001) |
++-----------+
+| NULL      |
++-----------+
+1 row in set (0.00 sec)
+
+mysql> select find(002)$$
++-----------+
+| find(002) |
++-----------+
+| NULL      |
++-----------+
+1 row in set (0.00 sec)
+
+mysql> drop function find$$
+Query OK, 0 rows affected (0.15 sec)
+
+mysql> delimiter $$
+mysql> 
+mysql> create function find(id int)
+    -> returns varchar(20)
+    -> NOT DETERMINISTIC
+    -> begin
+    ->     declare name varchar(20);
+    ->     set name=(select gam_name from gamers where gam_id = id);
+    -> return name;
+    -> end$$
+Query OK, 0 rows affected (0.13 sec)
+
+mysql> select find(001)$$
++-----------+
+| find(001) |
++-----------+
+| shroud    |
++-----------+
+1 row in set (0.00 sec)
+
+mysql> select find(002)$$
++-----------+
+| find(002) |
++-----------+
+| ninja     |
++-----------+
+1 row in set (0.00 sec)
+
+mysql> select find(003)$$
++-----------+
+| find(003) |
++-----------+
+| powerbang |
++-----------+
+1 row in set (0.00 sec)
+
+mysql> select find(004)$$
++-----------+
+| find(004) |
++-----------+
+| firestar  |
++-----------+
+1 row in set (0.00 sec)
+
+mysql> 
+

@@ -1,0 +1,5 @@
+find . -name "*.pyc" -exec rm -f {} \;
+
+Usually doing a clean on the pyc files solves this issue:
+
+The command above will delete all pyc files recursively.
